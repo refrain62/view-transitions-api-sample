@@ -1,0 +1,199 @@
+<html>
+<head>
+    <link rel="stylesheet" href="styles/main.css" />
+    <style>
+        /* 写真1 */
+        .photo-1 {
+            view-transition-name: photo-example-1;
+        }
+
+        /* 写真2 */
+        .photo-2 {
+            view-transition-name: photo-example-2;
+        }
+    </style>
+    <title>step3 複数の要素を連続して遷移させる</title>
+</head>
+<body>
+    <main>
+        2画面の要素を接続する実装
+        <!-- 一覧画面 -->
+        <div id="view-index">
+            <h1>Pickup Pictures</h1>
+
+            <ul class="photo-list">
+                <!-- 写真1 - サムネイル -->
+                <li>
+                    <div class="photo-link">
+                        <img
+                            class="photo-thumb photo-1"
+                            deta-content="1"
+                            src="https://placehold.jp/1920x1080.png"
+                            width="640"
+                            height="360"
+                            alt=""
+                            />
+                        <div class="photo-meta">
+                            <p class="i-title">
+                                グリフィス天文台からの景観
+                            </p>
+                            <div>
+                                <button class="btn button-open" data-content="1">
+                                    詳細を開く
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                
+                <!-- 写真2 - サムネイル -->
+                <li>
+                    <div class="photo-link">
+                        <img
+                            class="photo-thumb photo-2"
+                            data-content="2"
+                            src="https://placehold.jp/720x480.png"
+                            width="640"
+                            height="360"
+                            alt=""
+                            />
+                        <div class="photo-meta">
+                            <p class="i-title">
+                                グリフィス天文台からの景観2
+                            </p>
+                            <div>
+                                <button class="btn button-open" data-content="2">
+                                    詳細を開く
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 詳細画面 - 写真1 - 詳細 -->
+        <div id="view-detail" data-content="1" hidden>
+            <!-- hidden で隠す-->
+            <div class="detail-action">
+                <button class="btn button-close">
+                    一覧へもどる
+                </button>
+            </div>
+
+            <div class="detail-layout">
+                <div>
+                    <img
+                        class="photo-detail photo-1"
+                        src="https://placehold.jp/1920x1080.png"
+                        width="640"
+                        height="360"
+                        alt=""
+                        />
+                </div>
+
+                <div class="photo-details">
+                    <p class="i-title">
+                        グリフィス天文台からの景観
+                    </p>
+                    <p class="i-sub">
+                        ロサンゼルス
+                    </p>
+                    <p class="i-desc">
+                        グリフィス天文台は、ロサンゼルスのグリフィス公園内にある天文台です。アールデコ調の外観と、ダウンタウンをふくめ市内を一望できます。<br />
+                        2006年に、4年に渡る大規模な改築工事が完成し、展示場やシアター、カフェなどが加えられた[1]。また敷地内には映画「理由なき反抗」のロケ地として使用され、天文台の知名度を向上させた功績から、同作品で主演を務めたジェームズ・ディーンの銅像が建てられている。
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 詳細画面 - 写真2 - 詳細 -->
+        <div id="view-detail" data-content="2" hidden>
+            <!-- hidden で隠す-->
+            <div class="detail-action">
+                <button class="btn button-close">
+                    一覧へもどる
+                </button>
+            </div>
+
+            <div class="detail-layout">
+                <div>
+                    <img
+                        class="photo-detail photo-2"
+                        src="https://placehold.jp/720x480.png"
+                        width="640"
+                        height="360"
+                        alt=""
+                        />
+                </div>
+
+                <div class="photo-details">
+                    <p class="i-title">
+                        グリフィス天文台からの景観2
+                    </p>
+                    <p class="i-sub">
+                        ロサンゼルス2
+                    </p>
+                    <p class="i-desc">
+                        グリフィス天文台2は、ロサンゼルスのグリフィス公園内にある天文台です。アールデコ調の外観と、ダウンタウンをふくめ市内を一望できます。<br />
+                        2006年に、4年に渡る大規模な改築工事が完成し、展示場やシアター、カフェなどが加えられた[1]。また敷地内には映画「理由なき反抗」のロケ地として使用され、天文台の知名度を向上させた功績から、同作品で主演を務めたジェームズ・ディーンの銅像が建てられている。
+                    </p>
+                </div>
+            </div>
+            
+        </div>
+
+    </main>
+
+    <footer class="attention">
+        このデモはデスクトップのChrome・Edge向けに作成しています。Chrome・Edgeで確認ください。
+    </footer>
+
+    <script>
+        window.addEventListener("DOMContentLoaded", init);
+
+        function init() {
+            // 詳細を開くボタンのすべてに適用
+            document.querySelectorAll(".button-open").forEach((buttonOpen) => {
+
+                // ------------------------------
+                // 一覧画面から詳細画面へ
+                // ------------------------------
+                buttonOpen.addEventListener("click", (event) => {
+                    // 対象のIDを取得
+                    const contentId = event.target.dataset.content;
+
+                    // View Transition APIを呼び出す
+                    document.startViewTransition(() => {
+                        // 遷移後のDOM構造を指定
+                        document.querySelector("#view-index").hidden = true;
+                        document.querySelectorAll("#view-detail").forEach((element) => {
+                            element.hidden = element.dataset.content !== contentId;
+                        });
+                    });
+                });
+            });
+
+            // 一覧へもどるボタンのすべてに適用
+            document.querySelectorAll(".button-close").forEach((buttonClose) => {
+
+                // ------------------------------
+                // 詳細画面から一覧画面へ
+                // ------------------------------
+                buttonClose.addEventListener("click", () => {
+                    // View Transition APIを呼び出す
+                    document.startViewTransition( () => {
+                        // 遷移後のDOM構造を指定
+                        document.querySelector("#view-index").hidden = false;
+                        document.querySelectorAll("#view-detail").forEach((element) => {
+                            element.hidden = true;
+                        });
+                    });
+                });
+            });
+            
+        }
+    </script>
+</body>
+</html>
